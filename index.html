@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shahin Sumaiya Bot</title>
+    <title>Hams Trix Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -12,69 +12,68 @@
         .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .ad-container { background: #fff; margin: 5px 0; display: flex; justify-content: center; overflow: hidden; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: left; }
+        .card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: left; }
         .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .main-btn:disabled { background: #ccc; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
         .nav-item { font-size: 11px; color: #888; flex: 1; cursor: pointer; }
         .nav-item.active-nav { color: #3b2f91; font-weight: bold; }
-        .quiz-option { display: block; background: #f0f0f0; padding: 12px; margin: 8px 0; border-radius: 10px; cursor: pointer; border: 1px solid #ddd; }
-        .quiz-option:hover { background: #e0e0e0; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-card { background: #5d6d7e; color: white; padding: 15px; border-radius: 15px; }
+        .tab-container { display: flex; justify-content: space-around; margin-bottom: 15px; }
+        .tab { padding: 10px 20px; border-radius: 20px; background: #eee; cursor: pointer; font-size: 14px; }
+        .tab.active-tab { background: #2ecc71; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- TOP AD BANNER -->
-    <div class="ad-container">
-        <script type="text/javascript">
-            atOptions = { 'key' : '7039eb71f64ab82ab8865877338fc8fd', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/7039eb71f64ab82ab8865877338fc8fd/invoke.js"></script>
-    </div>
-
-    <!-- Home Page -->
+    <!-- Home Page (Watch Ads) -->
     <div id="home" class="page active">
         <div class="card" style="text-align: center;">
-            <div style="font-size: 50px;">📺</div>
-            <h2>অ্যাড দেখুন / Watch Ads</h2>
-            <p>২০ সেকেন্ড অপেক্ষা করুন (১০ পয়েন্ট)<br><small>Stay 20 seconds for 10.00 H</small></p>
-            <div id="timer-display" style="font-size: 20px; color: red; font-weight: bold;"></div>
-            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">অ্যাড দেখুন / Watch Ads</button>
-            <p style="margin-top: 10px; font-size: 12px;">সম্পন্ন / Completed: <span id="view-count">0</span> / 5</p>
+            <div style="font-size: 50px;">📢</div>
+            <h2>Watch Ads</h2>
+            <p>Earn H9.00 per ad watched</p>
+            <div id="timer-display" style="font-size: 18px; color: red; font-weight: bold; margin-bottom: 10px;"></div>
+            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">Watch Ads</button>
+            <p>Today's Completed: <span id="view-count">0</span> / 80</p>
         </div>
     </div>
 
-    <!-- Quiz Section -->
-    <div id="tutorial" class="page">
-        <h3>নিয়ম ও কুইজ / Rules & Quiz</h3>
-        <div class="card">
-            <b>১. সাধারণ অ্যাডে কত সময় থাকতে হয়?</b><br>
-            <small>How long to stay on a normal ad?</small>
-            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ সেকেন্ড / 20 Seconds</div>
-            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ সেকেন্ড / 10 Seconds</div>
+    <!-- Job Task (Social/Telegram) Page -->
+    <div id="jobtask" class="page">
+        <h3>Create and explore Telegram and social jobs</h3>
+        <div class="tab-container">
+            <div class="tab active-tab">TELEGRAM</div>
+            <div class="tab">OTHER SOCIAL MEDIA</div>
         </div>
         <div class="card">
-            <b>২. ৫ নম্বর অ্যাডে কত বোনাস পাওয়া যায়?</b><br>
-            <small>Bonus for the 5th ad?</small>
-            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ পয়েন্ট / 20 Points</div>
-            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ পয়েন্ট / 10 Points</div>
+            <b>Join Telegram Channel</b><br>
+            <small>Reward: H3.00</small>
+            <button style="float: right; background: #3498db; color: white; border: none; padding: 5px 15px; border-radius: 10px;">Join</button>
+        </div>
+        <div class="card">
+            <b>YouTube Subscribe</b><br>
+            <small>Reward: H5.00</small>
+            <button style="float: right; background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 10px;">Watch</button>
         </div>
     </div>
 
-    <!-- Wallet Page -->
+    <!-- Wallet & Dashboard Page -->
     <div id="wallet" class="page">
         <div class="card" style="background: linear-gradient(135deg, #3b2f91, #6252d4); color: white; text-align: center;">
-            <p>বর্তমান ব্যালেন্স / BALANCE</p>
-            <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 0.00</div>
+            <p>CURRENT BALANCE</p>
+            <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 30.00</div>
+        </div>
+        <div class="stat-grid">
+            <div class="stat-card">TOTAL TASKS<br><b>4</b></div>
+            <div class="stat-card">REFERRALS<br><b>0</b></div>
         </div>
     </div>
 
     <!-- Nav Bar -->
     <div class="nav-bar">
-        <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>হোম/Home</div>
-        <div class="nav-item" onclick="showPage('tutorial', this)">❓<br>কুইজ/Quiz</div>
-        <div class="nav-item" onclick="showPage('wallet', this)">💳<br>ওয়ালেট/Wallet</div>
+        <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>Home</div>
+        <div class="nav-item" onclick="showPage('jobtask', this)">📋<br>Job Task</div>
+        <div class="nav-item" onclick="showPage('wallet', this)">💳<br>Wallet</div>
     </div>
 
     <script>
@@ -94,65 +93,41 @@
         let currentBalance = 0;
         let adViews = 0;
 
-        // সংশোধিত লিঙ্ক তালিকা (কোটেশন মার্ক ঠিক করা হয়েছে)
+        // আপনার কোডের প্রধান ভুল (কোটেশন মার্ক) এখানে ঠিক করা হয়েছে [১২]
         const smartLinks = [
             "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60", 
-            "https://www.effectivegatecpm.com/swgevwv1d9?key=02cc07c5db0ace9d18af033df9db3d68", 
-            "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea", 
-            "https://www.effectivegatecpm.com/nxsh7tch6?key=b61c56d835ad538439ed9b8a469aac26", 
-            "https://www.effectivegatecpm.com/jwzin8c8?key=59b674e6dba381fc9f3ac1b91b9f48f3",
-            "https://www.effectivegatecpm.com/he7q04349?key=9321b950bdc20ad0ebaf96353be76bf5", 
-            "https://www.effectivegatecpm.com/d3aeye244?key=ba3f3b017454454f9638f4bfd2d43a65", 
-            "https://www.effectivegatecpm.com/fzymdu01?key=34743bb35051ea84679cd6e292a27d37", 
-            "https://www.effectivegatecpm.com/cr6pu750?key=f5210f2c411fe9f09c2b740609f8d192", 
-            "https://www.effectivegatecpm.com/su9vwnjzdv?key=c60c1fb73155df79184d55ac29e6dd8a",
-            "https://www.effectivegatecpm.com/tn3ivxubdb?key=94e9abf53a33b92f6352fc9a94435f19"
+            "https://www.effectivegatecpm.com/swgevwv1d9?key=02cc07c5db0ace9d18af033df9db3d68",
+            "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea"
         ];
 
         db.ref('users/' + user.id).on('value', (snap) => {
             let data = snap.val();
             if(data) {
-                currentBalance = data.balance;
+                currentBalance = data.balance || 0;
                 document.getElementById('user-balance').innerText = "🐹 " + currentBalance.toFixed(2);
-            } else {
-                db.ref('users/' + user.id).set({ balance: 0 });
             }
         });
 
         function handleAdClick() {
-            let isClickTask = (adViews + 1) % 5 === 0;
-            let waitTime = isClickTask ? 20 : 20; // আপনি চাইলে ক্লিক টাস্কের সময় বদলাতে পারেন
-            
-            // র‍্যান্ডম লিঙ্ক সিলেক্ট করার সঠিক পদ্ধতি
             let randomIndex = Math.floor(Math.random() * smartLinks.length);
             tg.openLink(smartLinks[randomIndex]);
 
             let btn = document.getElementById('watch-btn');
             btn.disabled = true;
-            let timeLeft = waitTime;
+            let timeLeft = 20;
             let countdown = setInterval(() => {
-                document.getElementById('timer-display').innerText = timeLeft + "s";
+                document.getElementById('timer-display').innerText = timeLeft + "s Remaining";
                 timeLeft--;
                 if (timeLeft < 0) {
                     clearInterval(countdown);
                     document.getElementById('timer-display').innerText = "";
                     btn.disabled = false;
-                    db.ref('users/' + user.id + '/balance').set(currentBalance + (isClickTask ? 20 : 10));
+                    db.ref('users/' + user.id + '/balance').set(currentBalance + 9.00);
                     adViews++;
-                    document.getElementById('view-count').innerText = adViews % 5;
-                    tg.showAlert("পয়েন্ট যোগ হয়েছে! / Points Added!");
+                    document.getElementById('view-count').innerText = adViews;
+                    tg.showAlert("পয়েন্ট যোগ হয়েছে!");
                 }
             }, 1000);
-        }
-
-        function checkQuiz(el, isCorrect) {
-            if(isCorrect) {
-                el.style.background = "#d4edda";
-                tg.showAlert("সঠিক উত্তর! / Correct!");
-            } else {
-                el.style.background = "#f8d7da";
-                tg.showAlert("ভুল উত্তর, আবার চেষ্টা করুন। / Wrong, try again.");
-            }
         }
 
         function showPage(pageId, el) {
