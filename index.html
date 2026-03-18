@@ -3,59 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Telegram Mini App</title>
-    <!-- টেলিগ্রামের অফিসিয়াল স্ক্রিপ্ট যুক্ত করা হয়েছে -->
+    <title>Shahin Sumayi Mini App</title>
+    <!-- SDKs -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f5ff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
-        .app-container { width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; }
-        .ad-card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-top: 20px; }
-        .icon { font-size: 50px; color: #ff4d4d; margin-bottom: 10px; }
-        h2 { margin: 10px 0; font-size: 22px; }
-        .reward-text { color: #28a745; font-weight: bold; margin: 10px 0; }
-        .progress-container { background: #eee; height: 10px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        .progress-bar { background: #4caf50; width: 10%; height: 100%; }
-        .watch-btn { background-color: #ff4d4d; color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .watch-btn:active { transform: scale(0.98); }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
-        .nav-item { font-size: 12px; color: #888; text-align: center; cursor: pointer; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f4f7fb; padding-bottom: 80px; color: #333; }
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Card Styles [1, 2] */
+        .card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .wallet-card { background: linear-gradient(135deg, #3b2f91, #6252d4); color: white; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 20px; }
+        .balance-amt { font-size: 40px; font-weight: bold; margin: 10px 0; }
+        
+        /* Button Styles */
+        .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .main-btn:active { transform: scale(0.98); }
+        .binance-btn { background: #f3ba2f; color: black; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        
+        /* List Items [3] */
+        .list-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 5px solid #6252d4; }
+        .reward-badge { background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+
+        /* Bottom Navigation [2, 4] */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .nav-item { font-size: 11px; color: #888; text-align: center; cursor: pointer; flex: 1; transition: 0.3s; }
+        .nav-item.active-nav { color: #3b2f91; font-weight: bold; transform: translateY(-3px); }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- ছবিতে দেখা ইন্টারফেসের মতো ডিজাইন [১] -->
-        <div class="ad-card">
-            <div class="icon">📢</div>
+    <!-- 1. Home Page [1, 4] -->
+    <div id="home" class="page active">
+        <div class="card">
+            <div style="font-size: 50px;">📢</div>
             <h2>Watch Ads</h2>
             <p>Earn H9.00 per ad watched</p>
-            <div class="reward-text">💵 Reward: H9.00</div>
-            
-            <p style="text-align: left; font-size: 14px; margin-bottom: 5px;">Today's Completed <span style="float: right;">2 / 80</span></p>
-            <div class="progress-container">
-                <div class="progress-bar"></div>
+            <p style="color: #28a745; font-weight: bold;">💵 Reward: H9.00</p>
+            <div style="background: #eee; height: 8px; border-radius: 5px; margin: 15px 0; overflow: hidden;">
+                <div id="progress" style="background: #28a745; width: 10%; height: 100%;"></div>
             </div>
-
-            <button class="watch-btn" onclick="showReward()">Watch Ads</button>
+            <p id="ad-count" style="font-size: 14px; color: #666;">Today's Completed: 2 / 80</p>
+            <button class="main-btn" onclick="watchAd()">Watch Ads</button>
         </div>
     </div>
 
-    <!-- নিচের নেভিগেশন মেনু [১] -->
+    <!-- 2. Daily Tasks Page [5] -->
+    <div id="tasks" class="page">
+        <h3>Daily Tasks</h3>
+        <div class="list-item">
+            <div><b>Daily Bonus</b><br><small>Login every day</small></div>
+            <span class="reward-badge">H5.00</span>
+        </div>
+        <div class="list-item">
+            <div><b>Telegram Support</b><br><small>Join our group</small></div>
+            <button style="background:#00d2ff; border:none; color:white; padding:8px 15px; border-radius:20px;">Join</button>
+        </div>
+    </div>
+
+    <!-- 3. Job Task Page (User Created) [3] -->
+    <div id="jobtask" class="page">
+        <h3>Telegram & Social Jobs</h3>
+        <button class="main-btn" style="background:#28a745; margin-bottom:15px; font-size:15px;" onclick="addNewJob()">➕ Create New Job</button>
+        <div id="job-list-container">
+            <!-- Jobs will load here from Firebase -->
+        </div>
+    </div>
+
+    <!-- 4. Referral Page [2, 4] -->
+    <div id="referral" class="page">
+        <div class="card">
+            <div style="font-size: 40px;">👥</div>
+            <h3>Referral System</h3>
+            <p>Invite friends and earn <b>H5.00</b> for each!</p>
+            <input type="text" id="refLink" readonly style="width: 90%; padding: 12px; text-align: center; border: 1px dashed #ccc; border-radius: 10px; margin-bottom: 15px;">
+            <button class="main-btn" style="background:#6252d4;" onclick="copyRef()">Copy Link</button>
+        </div>
+    </div>
+
+    <!-- 5. Wallet Page (Binance) [2] -->
+    <div id="wallet" class="page">
+        <div class="wallet-card">
+            <p style="opacity: 0.8; font-size: 14px;">CURRENT BALANCE</p>
+            <div id="user-balance" class="balance-amt">🐹 0.00</div>
+            <p style="font-size: 12px;">Min. Withdraw: 500 H</p>
+        </div>
+        <div class="card" style="text-align: left;">
+            <h4 style="margin: 0 0 10px 0;">Binance Withdrawal</h4>
+            <input type="text" id="binanceId" placeholder="Enter Binance Pay ID or USDT Address" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; margin-bottom: 10px;">
+            <button class="binance-btn" onclick="withdraw()">Withdraw via Binance</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
     <div class="nav-bar">
-        <div class="nav-item">🏠<br>Home</div>
-        <div class="nav-item">📋<br>Tasks</div>
-        <div class="nav-item">👥<br>Referral</div>
-        <div class="nav-item">💰<br>Wallet</div>
+        <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>Home</div>
+        <div class="nav-item" onclick="showPage('tasks', this)">📋<br>Tasks</div>
+        <div class="nav-item" onclick="showPage('jobtask', this)">📊<br>Job Task</div>
+        <div class="nav-item" onclick="showPage('referral', this)">👥<br>Referral</div>
+        <div class="nav-item" onclick="showPage('wallet', this)">💳<br>Wallet</div>
     </div>
 
     <script>
-        // টেলিগ্রাম ওয়েব অ্যাপ ইনিশিয়ালাইজ করা
+        // 1. Initialize Telegram WebApp
         let tg = window.Telegram.WebApp;
-        tg.expand(); // অ্যাপটি স্ক্রিন জুড়ে দেখাবে
+        tg.expand();
+        let user = tg.initDataUnsafe.user || { id: "test_user", username: "Guest" };
 
-        function showReward() {
-            tg.showAlert("You watched an ad! Reward: H9.00 added.");
+        // 2. Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAN9TlST44ezqYc1Lxonje-98GHLgQspAE",
+            authDomain: "shahinsumayi-bot-db.firebaseapp.com",
+            projectId: "shahinsumayi-bot-db",
+            storageBucket: "shahinsumayi-bot-db.firebasestorage.app",
+            messagingSenderId: "665263068908",
+            appId: "1:665263068908:web:d739b59ed7ab3aeae9f7c9",
+            measurementId: "G-ML4889FBFS",
+            databaseURL: "https://shahinsumayi-bot-db-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 3. App Logic
+        let currentBalance = 0;
+        const adLinks = [
+            "https://www.effectivegatecpm.com/cr6pu750?key=f5210f2c411fe9f09c2b740609f8d192",
+            "https://www.effectivegatecpm.com/su9vwnjzdv?key=c60c1fb73155df79184d55ac29e6dd8a",
+            "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60"
+        ];
+
+        // Load User Data from Firebase [6]
+        function loadData() {
+            db.ref('users/' + user.id).on('value', (snap) => {
+                let data = snap.val();
+                if(data) {
+                    currentBalance = data.balance;
+                    document.getElementById('user-balance').innerText = "🐹 " + currentBalance.toFixed(2);
+                    document.getElementById('refLink').value = "https://t.me/Shahinsumayibot?start=" + user.id;
+                } else {
+                    db.ref('users/' + user.id).set({ username: user.username, balance: 30.00, referrals: 0 });
+                }
+            });
+
+            // Load Global Jobs [3]
+            db.ref('jobs').on('value', (snap) => {
+                let jobs = snap.val();
+                let container = document.getElementById('job-list-container');
+                container.innerHTML = "";
+                for(let id in jobs) {
+                    container.innerHTML += `<div class="list-item">
+                        <div><b>${jobs[id].title}</b><br><small>Reward: ${jobs[id].reward}</small></div>
+                        <button class="reward-badge" style="border:none; cursor:pointer;" onclick="tg.openLink('${jobs[id].link}')">Join</button>
+                    </div>`;
+                }
+            });
         }
+
+        function showPage(pageId, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
+            el.classList.add('active-nav');
+        }
+
+        function watchAd() {
+            let link = adLinks[Math.floor(Math.random() * adLinks.length)];
+            tg.openLink(link);
+            // Reward adding logic
+            db.ref('users/' + user.id + '/balance').set(currentBalance + 9.00);
+            tg.showAlert("Ad watched! H9.00 added to your wallet.");
+        }
+
+        function addNewJob() {
+            let t = prompt("Task Name (e.g. Join My Group):");
+            let l = prompt("Your Link:");
+            if(t && l) {
+                db.ref('jobs').push({ title: t, link: l, reward: "H3.00" });
+                tg.showAlert("Job Posted Successfully!");
+            }
+        }
+
+        function withdraw() {
+            let id = document.getElementById('binanceId').value;
+            if(id.length > 5) {
+                db.ref('withdrawals').push({ userId: user.id, binanceId: id, amount: currentBalance });
+                tg.showAlert("Withdrawal request sent to Admin!");
+            } else {
+                tg.showAlert("Enter valid Binance ID");
+            }
+        }
+
+        function copyRef() {
+            let copyText = document.getElementById("refLink");
+            copyText.select();
+            document.execCommand("copy");
+            tg.showAlert("Referral link copied!");
+        }
+
+        window.onload = loadData;
     </script>
 </body>
 </html>
