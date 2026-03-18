@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <!-- Quiz/Tutorial Page -->
+    <!-- Quiz Section -->
     <div id="tutorial" class="page">
         <h3>নিয়ম ও কুইজ / Rules & Quiz</h3>
         <div class="card">
@@ -93,9 +93,10 @@
 
         let currentBalance = 0;
         let adViews = 0;
+
+        // সংশোধিত লিঙ্ক তালিকা (কোটেশন মার্ক ঠিক করা হয়েছে)
         const smartLinks = [
-                            
-            "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60, 
+            "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60", 
             "https://www.effectivegatecpm.com/swgevwv1d9?key=02cc07c5db0ace9d18af033df9db3d68", 
             "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea", 
             "https://www.effectivegatecpm.com/nxsh7tch6?key=b61c56d835ad538439ed9b8a469aac26", 
@@ -105,7 +106,7 @@
             "https://www.effectivegatecpm.com/fzymdu01?key=34743bb35051ea84679cd6e292a27d37", 
             "https://www.effectivegatecpm.com/cr6pu750?key=f5210f2c411fe9f09c2b740609f8d192", 
             "https://www.effectivegatecpm.com/su9vwnjzdv?key=c60c1fb73155df79184d55ac29e6dd8a",
-            "https://www.effectivegatecpm.com/tn3ivxubdb?key=94e9abf53a33b92f6352fc9a94435f19",
+            "https://www.effectivegatecpm.com/tn3ivxubdb?key=94e9abf53a33b92f6352fc9a94435f19"
         ];
 
         db.ref('users/' + user.id).on('value', (snap) => {
@@ -120,8 +121,12 @@
 
         function handleAdClick() {
             let isClickTask = (adViews + 1) % 5 === 0;
-            let waitTime = isClickTask ? 2 : 20; 
-            tg.openLink(smartLinks);
+            let waitTime = isClickTask ? 20 : 20; // আপনি চাইলে ক্লিক টাস্কের সময় বদলাতে পারেন
+            
+            // র‍্যান্ডম লিঙ্ক সিলেক্ট করার সঠিক পদ্ধতি
+            let randomIndex = Math.floor(Math.random() * smartLinks.length);
+            tg.openLink(smartLinks[randomIndex]);
+
             let btn = document.getElementById('watch-btn');
             btn.disabled = true;
             let timeLeft = waitTime;
