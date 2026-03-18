@@ -3,164 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shahin Sumayi Mini App</title>
-    <!-- SDKs -->
+    <title>Shahin Sumayi Bot Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f4f7fb; padding-bottom: 80px; color: #333; }
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f4f7fb; padding-bottom: 110px; text-align: center; }
+        .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Card Styles [1, 2] */
-        .card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .wallet-card { background: linear-gradient(135deg, #3b2f91, #6252d4); color: white; border-radius: 20px; padding: 30px; text-align: center; margin-bottom: 20px; }
-        .balance-amt { font-size: 40px; font-weight: bold; margin: 10px 0; }
-        
-        /* Button Styles */
-        .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .main-btn:active { transform: scale(0.98); }
-        .binance-btn { background: #f3ba2f; color: black; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-        
-        /* List Items [3] */
-        .list-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 5px solid #6252d4; }
-        .reward-badge { background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; }
-
-        /* Bottom Navigation [2, 4] */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .nav-item { font-size: 11px; color: #888; text-align: center; cursor: pointer; flex: 1; transition: 0.3s; }
-        .nav-item.active-nav { color: #3b2f91; font-weight: bold; transform: translateY(-3px); }
+        .ad-container { background: #fff; margin: 5px 0; display: flex; justify-content: center; overflow: hidden; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .main-btn:disabled { background: #ccc; cursor: not-allowed; }
+        #timer-display { font-size: 20px; color: #ff4d4d; font-weight: bold; margin: 10px 0; }
+        .list-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-left: 5px solid #6252d4; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: left; }
+        .task-btn { background: #00d2ff; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
+        .nav-item { font-size: 11px; color: #888; flex: 1; cursor: pointer; }
+        .nav-item.active-nav { color: #3b2f91; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- 1. Home Page [1, 4] -->
+    <!-- TOP AD BANNER -->
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = { 'key' : '7039eb71f64ab82ab8865877338fc8fd', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/7039eb71f64ab82ab8865877338fc8fd/invoke.js"></script>
+    </div>
+
+    <!-- Home Page -->
     <div id="home" class="page active">
         <div class="card">
-            <div style="font-size: 50px;">📢</div>
-            <h2>Watch Ads</h2>
-            <p>Earn H9.00 per ad watched</p>
-            <p style="color: #28a745; font-weight: bold;">💵 Reward: H9.00</p>
-            <div style="background: #eee; height: 8px; border-radius: 5px; margin: 15px 0; overflow: hidden;">
-                <div id="progress" style="background: #28a745; width: 10%; height: 100%;"></div>
-            </div>
-            <p id="ad-count" style="font-size: 14px; color: #666;">Today's Completed: 2 / 80</p>
-            <button class="main-btn" onclick="watchAd()">Watch Ads</button>
+            <div style="font-size: 50px;">📺</div>
+            <h2 id="ad-title">Watch Ads</h2>
+            <p id="ad-instruction">Stay 20 seconds for 10.00 H</p>
+            <div id="timer-display"></div>
+            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">Watch Ads</button>
+            <p style="margin-top: 10px; font-size: 12px; color: #666;">Ads Viewed: <span id="view-count">0</span> / 5</p>
         </div>
     </div>
 
-    <!-- 2. Daily Tasks Page [5] -->
-    <div id="tasks" class="page">
-        <h3>Daily Tasks</h3>
-        <div class="list-item">
-            <div><b>Daily Bonus</b><br><small>Login every day</small></div>
-            <span class="reward-badge">H5.00</span>
-        </div>
-        <div class="list-item">
-            <div><b>Telegram Support</b><br><small>Join our group</small></div>
-            <button style="background:#00d2ff; border:none; color:white; padding:8px 15px; border-radius:20px;">Join</button>
-        </div>
-    </div>
-
-    <!-- 3. Job Task Page (User Created) [3] -->
+    <!-- Social Tasks Page -->
     <div id="jobtask" class="page">
-        <h3>Telegram & Social Jobs</h3>
-        <button class="main-btn" style="background:#28a745; margin-bottom:15px; font-size:15px;" onclick="addNewJob()">➕ Create New Job</button>
-        <div id="job-list-container">
-            <!-- Jobs will load here from Firebase -->
+        <h3>Social Tasks (+30 H)</h3>
+        <div class="list-item">
+            <div><b>Telegram</b><br><small>Join @personaapps</small></div>
+            <button class="task-btn" onclick="completeSocialTask('https://t.me/personaapps', 30)">Join</button>
+        </div>
+        <div class="list-item">
+            <div><b>Blogger</b><br><small>Stay 60 Seconds</small> <span id="blog-timer" style="color:red;"></span></div>
+            <button id="blog-btn" class="task-btn" onclick="startBlogTask('https://primetrends24.blogspot.com', 30)">Visit</button>
+        </div>
+        <div class="list-item">
+            <div><b>YouTube</b><br><small>Subscribe & Watch</small></div>
+            <button class="task-btn" onclick="completeSocialTask('https://www.youtube.com/@Shahin_sumaiya1', 30)">Follow</button>
+        </div>
+        <div class="list-item">
+            <div><b>TikTok</b><br><small>Follow Profile</small></div>
+            <button class="task-btn" onclick="completeSocialTask('https://www.tiktok.com/@shahin_sumaiya0', 30)">Follow</button>
         </div>
     </div>
 
-    <!-- 4. Referral Page [2, 4] -->
-    <div id="referral" class="page">
-        <div class="card">
-            <div style="font-size: 40px;">👥</div>
-            <h3>Referral System</h3>
-            <p>Invite friends and earn <b>H5.00</b> for each!</p>
-            <input type="text" id="refLink" readonly style="width: 90%; padding: 12px; text-align: center; border: 1px dashed #ccc; border-radius: 10px; margin-bottom: 15px;">
-            <button class="main-btn" style="background:#6252d4;" onclick="copyRef()">Copy Link</button>
-        </div>
-    </div>
-
-    <!-- 5. Wallet Page (Binance) [2] -->
+    <!-- Wallet Page -->
     <div id="wallet" class="page">
-        <div class="wallet-card">
-            <p style="opacity: 0.8; font-size: 14px;">CURRENT BALANCE</p>
-            <div id="user-balance" class="balance-amt">🐹 0.00</div>
-            <p style="font-size: 12px;">Min. Withdraw: 500 H</p>
+        <div class="card" style="background: linear-gradient(135deg, #3b2f91, #6252d4); color: white;">
+            <p>BALANCE</p>
+            <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 0.00</div>
         </div>
-        <div class="card" style="text-align: left;">
-            <h4 style="margin: 0 0 10px 0;">Binance Withdrawal</h4>
-            <input type="text" id="binanceId" placeholder="Enter Binance Pay ID or USDT Address" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; margin-bottom: 10px;">
-            <button class="binance-btn" onclick="withdraw()">Withdraw via Binance</button>
+        <div class="card">
+            <input type="text" id="binanceId" placeholder="Binance Pay ID / Address" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; margin-bottom:10px; box-sizing: border-box;">
+            <button class="main-btn" style="background:#f3ba2f; color:#000;" onclick="withdraw()">Withdraw Binance</button>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
+    <!-- BOTTOM AD BANNER -->
+    <div class="ad-container" style="position: fixed; bottom: 60px; width: 100%;">
+        <script type="text/javascript">
+            atOptions = { 'key' : '7039eb71f64ab82ab8865877338fc8fd', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
+        </script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/7039eb71f64ab82ab8865877338fc8fd/invoke.js"></script>
+    </div>
+
+    <!-- Nav Bar -->
     <div class="nav-bar">
         <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>Home</div>
-        <div class="nav-item" onclick="showPage('tasks', this)">📋<br>Tasks</div>
-        <div class="nav-item" onclick="showPage('jobtask', this)">📊<br>Job Task</div>
-        <div class="nav-item" onclick="showPage('referral', this)">👥<br>Referral</div>
+        <div class="nav-item" onclick="showPage('jobtask', this)">📋<br>Tasks</div>
         <div class="nav-item" onclick="showPage('wallet', this)">💳<br>Wallet</div>
     </div>
 
     <script>
-        // 1. Initialize Telegram WebApp
         let tg = window.Telegram.WebApp;
         tg.expand();
-        let user = tg.initDataUnsafe.user || { id: "test_user", username: "Guest" };
+        let user = tg.initDataUnsafe.user || { id: "test_user" };
 
-        // 2. Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAN9TlST44ezqYc1Lxonje-98GHLgQspAE",
             authDomain: "shahinsumayi-bot-db.firebaseapp.com",
             projectId: "shahinsumayi-bot-db",
-            storageBucket: "shahinsumayi-bot-db.firebasestorage.app",
-            messagingSenderId: "665263068908",
-            appId: "1:665263068908:web:d739b59ed7ab3aeae9f7c9",
-            measurementId: "G-ML4889FBFS",
             databaseURL: "https://shahinsumayi-bot-db-default-rtdb.firebaseio.com/"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 3. App Logic
         let currentBalance = 0;
-        const adLinks = [
-            "https://www.effectivegatecpm.com/cr6pu750?key=f5210f2c411fe9f09c2b740609f8d192",
+        let adViews = 0;
+
+        // আপনার ১১ নম্বর ছবির ১০টি Smartlink এখানে একটার পর একটা বসান [১১]
+        const smartLinks = [
+                            
+            "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60, 
+            "https://www.effectivegatecpm.com/swgevwv1d9?key=02cc07c5db0ace9d18af033df9db3d68", 
+            "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea", 
+            "https://www.effectivegatecpm.com/nxsh7tch6?key=b61c56d835ad538439ed9b8a469aac26", 
+            "https://www.effectivegatecpm.com/jwzin8c8?key=59b674e6dba381fc9f3ac1b91b9f48f3",
+            "https://www.effectivegatecpm.com/he7q04349?key=9321b950bdc20ad0ebaf96353be76bf5", 
+            "https://www.effectivegatecpm.com/d3aeye244?key=ba3f3b017454454f9638f4bfd2d43a65", 
+            "https://www.effectivegatecpm.com/fzymdu01?key=34743bb35051ea84679cd6e292a27d37", 
+            "https://www.effectivegatecpm.com/cr6pu750?key=f5210f2c411fe9f09c2b740609f8d192", 
             "https://www.effectivegatecpm.com/su9vwnjzdv?key=c60c1fb73155df79184d55ac29e6dd8a",
-            "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60"
+            "https://www.effectivegatecpm.com/tn3ivxubdb?key=94e9abf53a33b92f6352fc9a94435f19",
         ];
 
-        // Load User Data from Firebase [6]
-        function loadData() {
-            db.ref('users/' + user.id).on('value', (snap) => {
-                let data = snap.val();
-                if(data) {
-                    currentBalance = data.balance;
-                    document.getElementById('user-balance').innerText = "🐹 " + currentBalance.toFixed(2);
-                    document.getElementById('refLink').value = "https://t.me/Shahinsumayibot?start=" + user.id;
-                } else {
-                    db.ref('users/' + user.id).set({ username: user.username, balance: 30.00, referrals: 0 });
-                }
-            });
+        db.ref('users/' + user.id).on('value', (snap) => {
+            let data = snap.val();
+            if(data) {
+                currentBalance = data.balance;
+                document.getElementById('user-balance').innerText = "🐹 " + currentBalance.toFixed(2);
+            } else {
+                db.ref('users/' + user.id).set({ balance: 0 });
+            }
+        });
 
-            // Load Global Jobs [3]
-            db.ref('jobs').on('value', (snap) => {
-                let jobs = snap.val();
-                let container = document.getElementById('job-list-container');
-                container.innerHTML = "";
-                for(let id in jobs) {
-                    container.innerHTML += `<div class="list-item">
-                        <div><b>${jobs[id].title}</b><br><small>Reward: ${jobs[id].reward}</small></div>
-                        <button class="reward-badge" style="border:none; cursor:pointer;" onclick="tg.openLink('${jobs[id].link}')">Join</button>
-                    </div>`;
+        function handleAdClick() {
+            let isClickTask = (adViews + 1) % 5 === 0;
+            let waitTime = isClickTask ? 2 : 20; // ৫ নম্বর অ্যাডে ২ সেকেন্ড, বাকিগুলোতে ২০ সেকেন্ড [১, ৪]
+            
+            let randomLink = smartLinks[Math.floor(Math.random() * smartLinks.length)];
+            tg.openLink(randomLink);
+            
+            let btn = document.getElementById('watch-btn');
+            let timerDisplay = document.getElementById('timer-display');
+            btn.disabled = true;
+
+            let timeLeft = waitTime;
+            let countdown = setInterval(() => {
+                timerDisplay.innerText = timeLeft + "s Remaining";
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(countdown);
+                    timerDisplay.innerText = "";
+                    btn.disabled = false;
+                    let reward = isClickTask ? 20 : 10;
+                    db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
+                    adViews++;
+                    document.getElementById('view-count').innerText = adViews % 5;
+                    tg.showAlert(isClickTask ? "Click Bonus: 20 Points!" : "Reward: 10 Points!");
                 }
-            });
+            }, 1000);
+        }
+
+        function startBlogTask(link, reward) {
+            tg.openLink(link);
+            let timeLeft = 60;
+            let btn = document.getElementById('blog-btn');
+            btn.disabled = true;
+            let timer = setInterval(() => {
+                document.getElementById('blog-timer').innerText = "(" + timeLeft + "s)";
+                timeLeft--;
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    document.getElementById('blog-timer').innerText = "";
+                    db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
+                    btn.innerText = "Completed";
+                    tg.showAlert("Blog Task Verified!");
+                }
+            }, 1000);
+        }
+
+        function completeSocialTask(link, reward) {
+            tg.openLink(link);
+            db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
+            tg.showAlert("Points Added!");
         }
 
         function showPage(pageId, el) {
@@ -170,41 +196,15 @@
             el.classList.add('active-nav');
         }
 
-        function watchAd() {
-            let link = adLinks[Math.floor(Math.random() * adLinks.length)];
-            tg.openLink(link);
-            // Reward adding logic
-            db.ref('users/' + user.id + '/balance').set(currentBalance + 9.00);
-            tg.showAlert("Ad watched! H9.00 added to your wallet.");
-        }
-
-        function addNewJob() {
-            let t = prompt("Task Name (e.g. Join My Group):");
-            let l = prompt("Your Link:");
-            if(t && l) {
-                db.ref('jobs').push({ title: t, link: l, reward: "H3.00" });
-                tg.showAlert("Job Posted Successfully!");
-            }
-        }
-
         function withdraw() {
             let id = document.getElementById('binanceId').value;
-            if(id.length > 5) {
+            if(id.length > 5 && currentBalance >= 500) {
                 db.ref('withdrawals').push({ userId: user.id, binanceId: id, amount: currentBalance });
-                tg.showAlert("Withdrawal request sent to Admin!");
+                tg.showAlert("Request Sent!");
             } else {
-                tg.showAlert("Enter valid Binance ID");
+                tg.showAlert("Min 500 H needed");
             }
         }
-
-        function copyRef() {
-            let copyText = document.getElementById("refLink");
-            copyText.select();
-            document.execCommand("copy");
-            tg.showAlert("Referral link copied!");
-        }
-
-        window.onload = loadData;
     </script>
 </body>
 </html>
