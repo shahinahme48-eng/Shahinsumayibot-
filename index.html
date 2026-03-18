@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shahin Sumayi Bot Pro</title>
+    <title>Shahin Sumaiya Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -13,15 +13,14 @@
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .ad-container { background: #fff; margin: 5px 0; display: flex; justify-content: center; overflow: hidden; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .main-btn:disabled { background: #ccc; cursor: not-allowed; }
-        #timer-display { font-size: 20px; color: #ff4d4d; font-weight: bold; margin: 10px 0; }
-        .list-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border-left: 5px solid #6252d4; box-shadow: 0 2px 5px rgba(0,0,0,0.02); text-align: left; }
-        .task-btn { background: #00d2ff; color: white; border: none; padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: left; }
+        .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .main-btn:disabled { background: #ccc; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
         .nav-item { font-size: 11px; color: #888; flex: 1; cursor: pointer; }
         .nav-item.active-nav { color: #3b2f91; font-weight: bold; }
+        .quiz-option { display: block; background: #f0f0f0; padding: 12px; margin: 8px 0; border-radius: 10px; cursor: pointer; border: 1px solid #ddd; }
+        .quiz-option:hover { background: #e0e0e0; }
     </style>
 </head>
 <body>
@@ -36,62 +35,46 @@
 
     <!-- Home Page -->
     <div id="home" class="page active">
-        <div class="card">
+        <div class="card" style="text-align: center;">
             <div style="font-size: 50px;">📺</div>
-            <h2 id="ad-title">Watch Ads</h2>
-            <p id="ad-instruction">Stay 20 seconds for 10.00 H</p>
-            <div id="timer-display"></div>
-            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">Watch Ads</button>
-            <p style="margin-top: 10px; font-size: 12px; color: #666;">Ads Viewed: <span id="view-count">0</span> / 5</p>
+            <h2>অ্যাড দেখুন / Watch Ads</h2>
+            <p>২০ সেকেন্ড অপেক্ষা করুন (১০ পয়েন্ট)<br><small>Stay 20 seconds for 10.00 H</small></p>
+            <div id="timer-display" style="font-size: 20px; color: red; font-weight: bold;"></div>
+            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">অ্যাড দেখুন / Watch Ads</button>
+            <p style="margin-top: 10px; font-size: 12px;">সম্পন্ন / Completed: <span id="view-count">0</span> / 5</p>
         </div>
     </div>
 
-    <!-- Social Tasks Page -->
-    <div id="jobtask" class="page">
-        <h3>Social Tasks (+30 H)</h3>
-        <div class="list-item">
-            <div><b>Telegram</b><br><small>Join @personaapps</small></div>
-            <button class="task-btn" onclick="completeSocialTask('https://t.me/personaapps', 30)">Join</button>
+    <!-- Quiz/Tutorial Page -->
+    <div id="tutorial" class="page">
+        <h3>নিয়ম ও কুইজ / Rules & Quiz</h3>
+        <div class="card">
+            <b>১. সাধারণ অ্যাডে কত সময় থাকতে হয়?</b><br>
+            <small>How long to stay on a normal ad?</small>
+            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ সেকেন্ড / 20 Seconds</div>
+            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ সেকেন্ড / 10 Seconds</div>
         </div>
-        <div class="list-item">
-            <div><b>Blogger</b><br><small>Stay 60 Seconds</small> <span id="blog-timer" style="color:red;"></span></div>
-            <button id="blog-btn" class="task-btn" onclick="startBlogTask('https://primetrends24.blogspot.com', 30)">Visit</button>
-        </div>
-        <div class="list-item">
-            <div><b>YouTube</b><br><small>Subscribe & Watch</small></div>
-            <button class="task-btn" onclick="completeSocialTask('https://www.youtube.com/@Shahin_sumaiya1', 30)">Follow</button>
-        </div>
-        <div class="list-item">
-            <div><b>TikTok</b><br><small>Follow Profile</small></div>
-            <button class="task-btn" onclick="completeSocialTask('https://www.tiktok.com/@shahin_sumaiya0', 30)">Follow</button>
+        <div class="card">
+            <b>২. ৫ নম্বর অ্যাডে কত বোনাস পাওয়া যায়?</b><br>
+            <small>Bonus for the 5th ad?</small>
+            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ পয়েন্ট / 20 Points</div>
+            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ পয়েন্ট / 10 Points</div>
         </div>
     </div>
 
     <!-- Wallet Page -->
     <div id="wallet" class="page">
-        <div class="card" style="background: linear-gradient(135deg, #3b2f91, #6252d4); color: white;">
-            <p>BALANCE</p>
+        <div class="card" style="background: linear-gradient(135deg, #3b2f91, #6252d4); color: white; text-align: center;">
+            <p>বর্তমান ব্যালেন্স / BALANCE</p>
             <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 0.00</div>
         </div>
-        <div class="card">
-            <input type="text" id="binanceId" placeholder="Binance Pay ID / Address" style="width:100%; padding:12px; border-radius:10px; border:1px solid #ddd; margin-bottom:10px; box-sizing: border-box;">
-            <button class="main-btn" style="background:#f3ba2f; color:#000;" onclick="withdraw()">Withdraw Binance</button>
-        </div>
-    </div>
-
-    <!-- BOTTOM AD BANNER -->
-    <div class="ad-container" style="position: fixed; bottom: 60px; width: 100%;">
-        <script type="text/javascript">
-            atOptions = { 'key' : '7039eb71f64ab82ab8865877338fc8fd', 'format' : 'iframe', 'height' : 50, 'width' : 320, 'params' : {} };
-        </script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/7039eb71f64ab82ab8865877338fc8fd/invoke.js"></script>
     </div>
 
     <!-- Nav Bar -->
     <div class="nav-bar">
-        <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>Home</div>
-        <div class="nav-item" onclick="showPage('jobtask', this)">📋<br>Tasks</div>
-        <div class="nav-item" onclick="showPage('wallet', this)">💳<br>Wallet</div>
+        <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>হোম/Home</div>
+        <div class="nav-item" onclick="showPage('tutorial', this)">❓<br>কুইজ/Quiz</div>
+        <div class="nav-item" onclick="showPage('wallet', this)">💳<br>ওয়ালেট/Wallet</div>
     </div>
 
     <script>
@@ -110,8 +93,6 @@
 
         let currentBalance = 0;
         let adViews = 0;
-
-        // আপনার ১১ নম্বর ছবির ১০টি Smartlink এখানে একটার পর একটা বসান [১১]
         const smartLinks = [
                             
             "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60, 
@@ -139,54 +120,34 @@
 
         function handleAdClick() {
             let isClickTask = (adViews + 1) % 5 === 0;
-            let waitTime = isClickTask ? 2 : 20; // ৫ নম্বর অ্যাডে ২ সেকেন্ড, বাকিগুলোতে ২০ সেকেন্ড [১, ৪]
-            
-            let randomLink = smartLinks[Math.floor(Math.random() * smartLinks.length)];
-            tg.openLink(randomLink);
-            
+            let waitTime = isClickTask ? 2 : 20; 
+            tg.openLink(smartLinks);
             let btn = document.getElementById('watch-btn');
-            let timerDisplay = document.getElementById('timer-display');
             btn.disabled = true;
-
             let timeLeft = waitTime;
             let countdown = setInterval(() => {
-                timerDisplay.innerText = timeLeft + "s Remaining";
+                document.getElementById('timer-display').innerText = timeLeft + "s";
                 timeLeft--;
                 if (timeLeft < 0) {
                     clearInterval(countdown);
-                    timerDisplay.innerText = "";
+                    document.getElementById('timer-display').innerText = "";
                     btn.disabled = false;
-                    let reward = isClickTask ? 20 : 10;
-                    db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
+                    db.ref('users/' + user.id + '/balance').set(currentBalance + (isClickTask ? 20 : 10));
                     adViews++;
                     document.getElementById('view-count').innerText = adViews % 5;
-                    tg.showAlert(isClickTask ? "Click Bonus: 20 Points!" : "Reward: 10 Points!");
+                    tg.showAlert("পয়েন্ট যোগ হয়েছে! / Points Added!");
                 }
             }, 1000);
         }
 
-        function startBlogTask(link, reward) {
-            tg.openLink(link);
-            let timeLeft = 60;
-            let btn = document.getElementById('blog-btn');
-            btn.disabled = true;
-            let timer = setInterval(() => {
-                document.getElementById('blog-timer').innerText = "(" + timeLeft + "s)";
-                timeLeft--;
-                if (timeLeft < 0) {
-                    clearInterval(timer);
-                    document.getElementById('blog-timer').innerText = "";
-                    db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
-                    btn.innerText = "Completed";
-                    tg.showAlert("Blog Task Verified!");
-                }
-            }, 1000);
-        }
-
-        function completeSocialTask(link, reward) {
-            tg.openLink(link);
-            db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
-            tg.showAlert("Points Added!");
+        function checkQuiz(el, isCorrect) {
+            if(isCorrect) {
+                el.style.background = "#d4edda";
+                tg.showAlert("সঠিক উত্তর! / Correct!");
+            } else {
+                el.style.background = "#f8d7da";
+                tg.showAlert("ভুল উত্তর, আবার চেষ্টা করুন। / Wrong, try again.");
+            }
         }
 
         function showPage(pageId, el) {
@@ -194,16 +155,6 @@
             document.getElementById(pageId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
             el.classList.add('active-nav');
-        }
-
-        function withdraw() {
-            let id = document.getElementById('binanceId').value;
-            if(id.length > 5 && currentBalance >= 500) {
-                db.ref('withdrawals').push({ userId: user.id, binanceId: id, amount: currentBalance });
-                tg.showAlert("Request Sent!");
-            } else {
-                tg.showAlert("Min 500 H needed");
-            }
         }
     </script>
 </body>
