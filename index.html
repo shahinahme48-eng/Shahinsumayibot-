@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Telegram Mini App</title>
+    <!-- টেলিগ্রামের অফিসিয়াল স্ক্রিপ্ট যুক্ত করা হয়েছে -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f5ff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; }
+        .ad-card { background: white; border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-top: 20px; }
+        .icon { font-size: 50px; color: #ff4d4d; margin-bottom: 10px; }
+        h2 { margin: 10px 0; font-size: 22px; }
+        .reward-text { color: #28a745; font-weight: bold; margin: 10px 0; }
+        .progress-container { background: #eee; height: 10px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-bar { background: #4caf50; width: 10%; height: 100%; }
+        .watch-btn { background-color: #ff4d4d; color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .watch-btn:active { transform: scale(0.98); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 400px; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; }
+        .nav-item { font-size: 12px; color: #888; text-align: center; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- ছবিতে দেখা ইন্টারফেসের মতো ডিজাইন [১] -->
+        <div class="ad-card">
+            <div class="icon">📢</div>
+            <h2>Watch Ads</h2>
+            <p>Earn H9.00 per ad watched</p>
+            <div class="reward-text">💵 Reward: H9.00</div>
+            
+            <p style="text-align: left; font-size: 14px; margin-bottom: 5px;">Today's Completed <span style="float: right;">2 / 80</span></p>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+
+            <button class="watch-btn" onclick="showReward()">Watch Ads</button>
+        </div>
+    </div>
+
+    <!-- নিচের নেভিগেশন মেনু [১] -->
+    <div class="nav-bar">
+        <div class="nav-item">🏠<br>Home</div>
+        <div class="nav-item">📋<br>Tasks</div>
+        <div class="nav-item">👥<br>Referral</div>
+        <div class="nav-item">💰<br>Wallet</div>
+    </div>
+
+    <script>
+        // টেলিগ্রাম ওয়েব অ্যাপ ইনিশিয়ালাইজ করা
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // অ্যাপটি স্ক্রিন জুড়ে দেখাবে
+
+        function showReward() {
+            tg.showAlert("You watched an ad! Reward: H9.00 added.");
+        }
+    </script>
+</body>
+</html>
