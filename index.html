@@ -8,71 +8,118 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f4f7fb; padding-bottom: 110px; text-align: center; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f4f7fb; padding-bottom: 110px; text-align: center; color: #333; }
         .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Card Styles */
         .card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; text-align: left; }
         .main-btn { background: #ff4d4d; color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .main-btn:disabled { background: #ccc; }
+
+        /* Dashboard Grid (Source 6) */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .stat-card { background: #5d6d7e; color: white; padding: 15px; border-radius: 15px; text-align: center; }
+
+        /* Nav Bar */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
         .nav-item { font-size: 11px; color: #888; flex: 1; cursor: pointer; }
         .nav-item.active-nav { color: #3b2f91; font-weight: bold; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .stat-card { background: #5d6d7e; color: white; padding: 15px; border-radius: 15px; }
+
+        /* Quiz & Tabs (Source 8, 14) */
+        .quiz-option { display: block; background: #f0f0f0; padding: 12px; margin: 8px 0; border-radius: 10px; cursor: pointer; border: 1px solid #ddd; }
         .tab-container { display: flex; justify-content: space-around; margin-bottom: 15px; }
-        .tab { padding: 10px 20px; border-radius: 20px; background: #eee; cursor: pointer; font-size: 14px; }
-        .tab.active-tab { background: #2ecc71; color: white; }
+        .tab { padding: 10px 20px; border-radius: 20px; background: #eee; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .active-tab { background: #2ecc71; color: white; }
     </style>
 </head>
 <body>
 
-    <!-- Home Page (Watch Ads) -->
+    <!-- HOME PAGE (Watch Ads - Source 1, 13) -->
     <div id="home" class="page active">
         <div class="card" style="text-align: center;">
-            <div style="font-size: 50px;">📢</div>
-            <h2>Watch Ads</h2>
+            <div style="font-size: 50px;">📺</div>
+            <h2>অ্যাড দেখুন / Watch Ads</h2>
             <p>Earn H9.00 per ad watched</p>
-            <div id="timer-display" style="font-size: 18px; color: red; font-weight: bold; margin-bottom: 10px;"></div>
-            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">Watch Ads</button>
-            <p>Today's Completed: <span id="view-count">0</span> / 80</p>
+            <div id="timer-display" style="font-size: 18px; color: red; font-weight: bold;"></div>
+            <button id="watch-btn" class="main-btn" onclick="handleAdClick()">অ্যাড দেখুন / Watch Ads</button>
+            <p>সম্পন্ন / Completed: <span id="view-count">0</span> / 80</p>
         </div>
     </div>
 
-    <!-- Job Task (Social/Telegram) Page -->
+    <!-- JOB TASK PAGE (Telegram/Social - Source 8) -->
     <div id="jobtask" class="page">
-        <h3>Create and explore Telegram and social jobs</h3>
+        <h3>Create and explore jobs</h3>
         <div class="tab-container">
             <div class="tab active-tab">TELEGRAM</div>
             <div class="tab">OTHER SOCIAL MEDIA</div>
         </div>
-        <div class="card">
-            <b>Join Telegram Channel</b><br>
-            <small>Reward: H3.00</small>
-            <button style="float: right; background: #3498db; color: white; border: none; padding: 5px 15px; border-radius: 10px;">Join</button>
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <b>YouTube Subscribe</b><br>
+                <small>Reward: H5.00</small>
+            </div>
+            <button style="background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 10px;" onclick="tg.openLink('YOUR_YT_LINK')">Watch</button>
         </div>
-        <div class="card">
-            <b>YouTube Subscribe</b><br>
-            <small>Reward: H5.00</small>
-            <button style="float: right; background: #e74c3c; color: white; border: none; padding: 5px 15px; border-radius: 10px;">Watch</button>
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <b>Join Telegram</b><br>
+                <small>Reward: H3.00</small>
+            </div>
+            <button style="background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 10px;" onclick="tg.openLink('YOUR_TG_LINK')">Join</button>
         </div>
     </div>
 
-    <!-- Wallet & Dashboard Page -->
+    <!-- QUIZ PAGE (Source 14) -->
+    <div id="tutorial" class="page">
+        <h3>নিয়ম ও কুইজ / Rules & Quiz</h3>
+        <div class="card">
+            <b>১. সাধারণ অ্যাডে কত সময় থাকতে হয়?</b>
+            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ সেকেন্ড / 20 Seconds</div>
+            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ সেকেন্ড / 10 Seconds</div>
+        </div>
+        <div class="card">
+            <b>২. ৫ নম্বর অ্যাডে কত বোনাস পাওয়া যায়?</b>
+            <div class="quiz-option" onclick="checkQuiz(this, true)">২০ পয়েন্ট / 20 Points</div>
+            <div class="quiz-option" onclick="checkQuiz(this, false)">১০ পয়েন্ট / 10 Points</div>
+        </div>
+    </div>
+
+    <!-- REFERRAL PAGE (Source 4) -->
+    <div id="referral" class="page">
+        <div class="card" style="text-align: center;">
+            <h2>Refer & Earn</h2>
+            <p>Invite friends and earn H10.00 each!</p>
+            <input type="text" id="ref-link" value="https://t.me/HamsTrixBot?start=ref" readonly style="width: 80%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; text-align: center;">
+            <button class="main-btn" onclick="copyRef()">Copy Link</button>
+        </div>
+    </div>
+
+    <!-- WALLET PAGE (Dashboard - Source 6, 12) -->
     <div id="wallet" class="page">
         <div class="card" style="background: linear-gradient(135deg, #3b2f91, #6252d4); color: white; text-align: center;">
             <p>CURRENT BALANCE</p>
-            <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 30.00</div>
+            <div id="user-balance" style="font-size: 40px; font-weight: bold;">🐹 0.00</div>
         </div>
         <div class="stat-grid">
-            <div class="stat-card">TOTAL TASKS<br><b>4</b></div>
-            <div class="stat-card">REFERRALS<br><b>0</b></div>
+            <div class="stat-card">TOTAL TASKS<br><b id="total-tasks">0</b></div>
+            <div class="stat-card">REFERRALS<br><b id="total-ref">0</b></div>
+            <div class="stat-card">DAILY ADS<br><b>0</b></div>
+            <div class="stat-card">BONUS<br><b>H0.00</b></div>
+        </div>
+        <div class="card" style="margin-top: 15px;">
+            <input type="text" placeholder="Binance Pay ID / Address" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd;">
+            <button class="main-btn" style="background: #3b2f91;">Withdraw Binance</button>
         </div>
     </div>
 
-    <!-- Nav Bar -->
+    <!-- NAVIGATION BAR -->
     <div class="nav-bar">
         <div class="nav-item active-nav" onclick="showPage('home', this)">🏠<br>Home</div>
-        <div class="nav-item" onclick="showPage('jobtask', this)">📋<br>Job Task</div>
+        <div class="nav-item" onclick="showPage('jobtask', this)">📊<br>Tasks</div>
+        <div class="nav-item" onclick="showPage('tutorial', this)">❓<br>Quiz</div>
+        <div class="nav-item" onclick="showPage('referral', this)">👥<br>Referral</div>
         <div class="nav-item" onclick="showPage('wallet', this)">💳<br>Wallet</div>
     </div>
 
@@ -93,11 +140,12 @@
         let currentBalance = 0;
         let adViews = 0;
 
-        // আপনার কোডের প্রধান ভুল (কোটেশন মার্ক) এখানে ঠিক করা হয়েছে [১২]
+        // আপনার ১২ নম্বর ছবির ভুল এখানে ঠিক করা হয়েছে [১২]
         const smartLinks = [
             "https://www.effectivegatecpm.com/xsa7wwtss?key=16f094c1b9d31d03f0c0266beb16fc60", 
             "https://www.effectivegatecpm.com/swgevwv1d9?key=02cc07c5db0ace9d18af033df9db3d68",
-            "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea"
+            "https://www.effectivegatecpm.com/ji7qa6yqa?key=469c25cfe6c3da23d0e8a5bbde8182ea",
+            "https://www.effectivegatecpm.com/nxsh7tch6?key=b61c56d835ad538439ed9b8a469aac26"
         ];
 
         db.ref('users/' + user.id).on('value', (snap) => {
@@ -105,12 +153,17 @@
             if(data) {
                 currentBalance = data.balance || 0;
                 document.getElementById('user-balance').innerText = "🐹 " + currentBalance.toFixed(2);
+                document.getElementById('total-tasks').innerText = data.tasks || 0;
+                document.getElementById('total-ref').innerText = data.refs || 0;
+            } else {
+                db.ref('users/' + user.id).set({ balance: 0, tasks: 0, refs: 0 });
             }
         });
 
         function handleAdClick() {
+            let isClickTask = (adViews + 1) % 5 === 0;
             let randomIndex = Math.floor(Math.random() * smartLinks.length);
-            tg.openLink(smartLinks[randomIndex]);
+            tg.openLink(smartLinks[randomIndex]); // এখানে ভুল ছিল, ঠিক করা হয়েছে [১২]
 
             let btn = document.getElementById('watch-btn');
             btn.disabled = true;
@@ -122,12 +175,23 @@
                     clearInterval(countdown);
                     document.getElementById('timer-display').innerText = "";
                     btn.disabled = false;
-                    db.ref('users/' + user.id + '/balance').set(currentBalance + 9.00);
+                    let reward = isClickTask ? 20 : 10;
+                    db.ref('users/' + user.id + '/balance').set(currentBalance + reward);
                     adViews++;
-                    document.getElementById('view-count').innerText = adViews;
-                    tg.showAlert("পয়েন্ট যোগ হয়েছে!");
+                    document.getElementById('view-count').innerText = adViews % 80;
+                    tg.showAlert("পয়েন্ট যোগ হয়েছে! / Points Added!");
                 }
             }, 1000);
+        }
+
+        function checkQuiz(el, isCorrect) {
+            if(isCorrect) {
+                el.style.background = "#d4edda";
+                tg.showAlert("সঠিক উত্তর! / Correct!");
+            } else {
+                el.style.background = "#f8d7da";
+                tg.showAlert("ভুল উত্তর! / Wrong!");
+            }
         }
 
         function showPage(pageId, el) {
@@ -135,6 +199,13 @@
             document.getElementById(pageId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active-nav'));
             el.classList.add('active-nav');
+        }
+
+        function copyRef() {
+            let copyText = document.getElementById("ref-link");
+            copyText.select();
+            document.execCommand("copy");
+            tg.showAlert("লিঙ্ক কপি হয়েছে! / Link Copied!");
         }
     </script>
 </body>
